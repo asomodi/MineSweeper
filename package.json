@@ -1,0 +1,13 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "minesweeper game",
+  "main": "script.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.1"
+  }
+}
