@@ -1,52 +1,91 @@
 const boardContainer = document.getElementById('board');
-const column = 10;
-const row = 10;
+const columns = 10;
+const rows = 10;
+const board = [];
+
+function cell(row, column){
+    return "<div class='empty cell' row-data="+ row +"  column-data="+ column +"></div>";
+}
+
+function mine(row, column){
+    return "<div class='mine cell' row-data="+ row +"  column-data="+ column +"></div>";
+}
 
 createBoard();
-setMines(8);
+setMines(5);
+insertBoard();
 
 function createBoard(){
-   for (let i = 0; i < row; i++) { 
-    addDivIntoContainer(createDomElement('row'), boardContainer); 
-        for (let j = 0; j < column; j++) {
-            let actualRow = document.getElementsByClassName('row')[i]; 
-            const cell = createDomElement('cell');
-            addPositionData(cell, i, j);
-            addDivIntoContainer(cell, actualRow);
-        }
-    } 
+    for (let i = 0; i < rows; i++) { 
+        board[i]=[cell];
+        for (let j = 0; j < columns; j++)    { 
+            board[i][j] = cell(i,j);
+        } 
+    }
 }
 
-function addDivIntoContainer(div, container){
-    container.appendChild(div);
+function insertBoard(){
+    clearBoard();
+    for (let i = 0; i < rows; i++) { 
+        for (let j = 0; j < columns; j++)    { 
+            boardContainer.insertAdjacentHTML("beforeend", board[i][j]);
+        } 
+    }
 }
 
-function createDomElement(styleClassName){
-    const div = document.createElement('div');
-    div.classList.add(styleClassName);
-    return div;
+function countMines(){
+    let count = 0;
+    for (let i = 0; i < rows; i++) { 
+        for (let j = 0; j < columns; j++)    { 
+            if (board[i][j] === mine(i,j)){
+                count++;
+            };
+        } 
+    }
+    return count;
 }
 
-function addPositionData(cell, row, column) {
-    cell.setAttribute('column-data', column);
-    cell.setAttribute('row-data', row);
+function clearBoard() {
+    boardContainer.innerHTML = "";
+}
+
+function generateRandomNumber(){
+    return Math.floor(Math.random() * (rows-1));
 }
 
 function setMines(amountOfMines) {
+    let minesNow = 0;
 
-    const arrayOfRandomNumbers = [];
-    while(arrayOfRandomNumbers.length < amountOfMines){
-        const randomNumber = Math.floor(Math.random() * 100);
-        if(arrayOfRandomNumbers.indexOf(randomNumber) === -1) {
-            arrayOfRandomNumbers.push(randomNumber); 
+    while (minesNow < amountOfMines) {
+        x = generateRandomNumber();
+        y= generateRandomNumber();
+        board[x][y] = mine(x,y);
+        minesNow = countMines();
+    }
+}
+
+function searchForMines(row, column){
+
+    if (board[row][column] === mine(row, column)){
+        console.log("DIE");
+        return "die";
+    }
+
+    let countMines = 0;
+
+        for (let a = -1; a <= 1; a++) {
+            for (let b = -1; b <= 1; b++) {
+                if (typeof board[row + a] !== 'undefined' 
+                    && typeof board[row + b] !== 'undefined' 
+                    && typeof board[row + a][column + b] !== 'undefined') {
+                    if (board[row + a][column + b] === mine(row + a, row + b)) {
+                        if (!(a === 0 && b === 0)) {
+                            countMines++;
+                        }
+                    }
+                }
+            }
         }
-    } 
 
-    const allCell = document.getElementsByClassName('cell'); 
-    
-    for (let i = 0; i < arrayOfRandomNumbers.length; i++) {
-        allCell[arrayOfRandomNumbers[i]].classList.add('mine');
-    } 
-    
-
+    return countMines;
 }

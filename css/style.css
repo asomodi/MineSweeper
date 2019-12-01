@@ -3,10 +3,11 @@ body {
     text-align: center;
   }
 
-.row {
+#board {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    margin:auto;
+    width: 529px;
+    flex-wrap: wrap;
 }
 
 .cell {
