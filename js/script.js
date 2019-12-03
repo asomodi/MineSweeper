@@ -4,11 +4,11 @@ const rows = 10;
 const board = [];
 
 function cell(row, column){
-    return "<div class='empty cell' row-data="+ row +"  column-data="+ column +"></div>";
+    return "<div class='empty cell' row-data="+ row +" column-data="+ column +"></div>";
 }
 
 function mine(row, column){
-    return "<div class='mine cell' row-data="+ row +"  column-data="+ column +"></div>";
+    return "<div class='mine cell' row-data="+ row +" column-data="+ column +"></div>";
 }
 
 createBoard();
@@ -65,7 +65,8 @@ function setMines(amountOfMines) {
 }
 
 function searchForMines(row, column){
-
+row=Number(row);
+column=Number(column);
     if (board[row][column] === mine(row, column)){
         console.log("DIE");
         return "die";
@@ -78,7 +79,7 @@ function searchForMines(row, column){
                 if (typeof board[row + a] !== 'undefined' 
                     && typeof board[row + b] !== 'undefined' 
                     && typeof board[row + a][column + b] !== 'undefined') {
-                    if (board[row + a][column + b] === mine(row + a, row + b)) {
+                    if (board[row + a][column + b] === mine(row + a, column + b)) {
                         if (!(a === 0 && b === 0)) {
                             countMines++;
                         }
@@ -86,6 +87,28 @@ function searchForMines(row, column){
                 }
             }
         }
-
     return countMines;
+}
+
+const allCells = document.querySelectorAll('.cell');
+
+allCells.forEach(currentCell => {
+    currentCell.addEventListener("click", event =>{
+    
+        getMineDataForcell(currentCell)
+     });    
+});
+
+
+function revealEverything(){
+    allCells.forEach(currentCell => {
+        getMineDataForcell(currentCell)
+    }); 
+}
+
+function getMineDataForcell(currentCell){
+    //console.log(currentCell);
+    const columnData = currentCell.getAttribute('column-data');
+    const rowData = currentCell.getAttribute('row-data');
+    currentCell.innerHTML = searchForMines(rowData, columnData);
 }
