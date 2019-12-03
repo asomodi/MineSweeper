@@ -14,6 +14,7 @@ function mine(row, column){
 createBoard();
 setMines(5);
 insertBoard();
+addRevealOnClick();
 
 function createBoard(){
     for (let i = 0; i < rows; i++) { 
@@ -92,13 +93,13 @@ column=Number(column);
 
 const allCells = document.querySelectorAll('.cell');
 
-allCells.forEach(currentCell => {
-    currentCell.addEventListener("click", event =>{
-    
-        getMineDataForcell(currentCell)
-     });    
-});
-
+function addRevealOnClick(){
+    allCells.forEach(currentCell => {
+        currentCell.addEventListener("click", event =>{
+            getMineDataForcell(currentCell)
+        });    
+    });
+}
 
 function revealEverything(){
     allCells.forEach(currentCell => {
